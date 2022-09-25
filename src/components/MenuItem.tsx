@@ -7,12 +7,14 @@ interface MenuItemProps {
   isHovered: boolean;
 }
 
+const ITEM_WIDTH = 64;
+
 const Container = styled(motion.div)`
-  width: 64px;
-  height: 64px;
+  width: ${ITEM_WIDTH}px;
+  height: ${ITEM_WIDTH}px;
   background: white;
   border-radius: 14px;
-  box-shadow: 0 8px rgba(0, 0, 0, 0.123);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.123);
   cursor: pointer;
 `;
 
@@ -21,11 +23,14 @@ const MenuItem: React.FC<MenuItemProps> = ({ mouseX, isHovered }) => {
   const [left, setLeft] = useState(0);
 
   const distance = useTransform(mouseX, (newMouseX) => {
-    const mouseDiff = Math.abs(left + 32 - newMouseX);
-
-    return mouseDiff;
+    return Math.abs(left + ITEM_WIDTH / 2 - newMouseX);
   });
-  const length = useTransform(distance, [0, 100], [87, 64]);
+
+  const length = useTransform(
+    distance,
+    [100, 0],
+    [ITEM_WIDTH, ITEM_WIDTH * 1.4]
+  );
   const rise = useTransform(distance, [0, 120], [-8, 0]);
 
   useEffect(() => {

@@ -12,7 +12,7 @@ const Container = styled(motion.div)`
   bottom: 8px;
   height: 72px;
   padding: 0.5rem 1rem 1.4rem;
-  border: 1px solid rgba(116 116 116 0.5);
+  border: 1px solid rgba(200, 200, 200, 0.5);
   left: 50%;
   transform: translateX(-50%);
   border-radius: 24px;
@@ -25,8 +25,12 @@ const Menu: React.FC = () => {
 
   useEffect(() => {
     if (!ref.current) return;
+    if (!isHovered) {
+      animate(mouseX, 0, { duration: 0 });
+      return;
+    }
     const handleMouseMove = (e: MouseEvent) => {
-      animate(mouseX, e.clientX);
+      animate(mouseX, e.clientX, { duration: 0 });
     };
     ref.current.addEventListener('mousemove', handleMouseMove);
     return () => {
