@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 interface MenuItemProps {
   mouseX: MotionValue<number>;
+  isHovered: boolean;
 }
 
 const Container = styled(motion.div)`
@@ -11,17 +12,21 @@ const Container = styled(motion.div)`
   height: 64px;
   background: white;
   border-radius: 14px;
+  box-shadow: 0 8px rgba(0, 0, 0, 0.123);
+  cursor: pointer;
 `;
 
-const MenuItem: React.FC<MenuItemProps> = ({ mouseX }) => {
+const MenuItem: React.FC<MenuItemProps> = ({ mouseX, isHovered }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [left, setLeft] = useState(0);
 
-  const scale = useTransform(mouseX, (newMouseX) => {
+  const distance = useTransform(mouseX, (newMouseX) => {
     const mouseDiff = Math.abs(left + 32 - newMouseX);
-    if (mouseDiff > 50) return 1;
-    return 1.2;
+
+    return mouseDiff;
   });
+  const length = useTransform(distance, [0, 100], [87, 64]);
+  const rise = useTransform(distance, [0, 120], [-8, 0]);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -29,9 +34,12 @@ const MenuItem: React.FC<MenuItemProps> = ({ mouseX }) => {
     setLeft(rect.left);
   }, [ref.current]);
 
-  console.log(left);
-
-  return <Container style={{ scale }} ref={ref} />;
+  return (
+    <Container
+      style={{ width: length, height: length, translateY: rise }}
+      ref={ref}
+    />
+  );
 };
 
 export default MenuItem;
