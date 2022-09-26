@@ -32,15 +32,19 @@ const MenuItem: React.FC<MenuItemProps> = ({ mouseX, isHovered }) => {
 
   return (
     <MotionBox
-      style={{ width: length, height: length, translateY: rise }}
+      style={{
+        cursor: 'pointer',
+        width: length,
+        height: length,
+        translateY: rise,
+      }}
       ref={ref}
       whileTap={{ translateY: 0 }}
       width={`${ITEM_LENGTH}px`}
       height={`${ITEM_LENGTH}px`}
-      background="linear-gradient(to left, hsla(160 60% 90% / 1), hsla(210 60% 90% / 1))"
+      background="linear-gradient(to left, hsla(160 60% 100% / 1), hsla(210 60% 90% / 1))"
       borderRadius="14px"
       boxShadow="0 8px 16px rgba(0 0 0 / 0.15"
-      cursor="pointer"
     />
   );
 };

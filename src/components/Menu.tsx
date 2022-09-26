@@ -5,21 +5,25 @@ import MenuItem from './MenuItem';
 
 const Menu: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const isFirstTransition = useRef(true);
+
   const mouseX = useMotionValue(0);
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (!ref.current) return;
-    if (!isHovered) {
-      animate(mouseX, 0, { duration: 0 });
-      return;
-    }
+    if (!isHovered) return;
     const handleMouseMove = (e: MouseEvent) => {
-      animate(mouseX, e.clientX, { duration: 0 });
+      let duration = 0.05;
+      if (isFirstTransition.current === true) duration = 0;
+      animate(mouseX, e.clientX, { duration });
+      isFirstTransition.current = false;
     };
     ref.current.addEventListener('mousemove', handleMouseMove);
     return () => {
       ref.current?.removeEventListener('mousemove', handleMouseMove);
+      isFirstTransition.current = true;
+      animate(mouseX, 0, { duration: 0 });
     };
   }, [isHovered]);
 
@@ -35,7 +39,7 @@ const Menu: React.FC = () => {
       position="fixed"
       background="rgba(0 0 0 / 0.5)"
       bottom={2}
-      height="72px"
+      height="98px"
       padding="0.5rem 1rem 1.4rem"
       border="1px solid rgba(200 200 200 / 0.5)"
       left="50%"
