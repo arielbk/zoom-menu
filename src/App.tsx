@@ -1,10 +1,11 @@
+import { ChakraProvider } from '@chakra-ui/react';
 import Menu from './components/Menu';
 
 function App() {
   return (
-    <div>
+    <ChakraProvider>
       <Menu />
-    </div>
+    </ChakraProvider>
   );
 }
 
