@@ -6,25 +6,33 @@ import MotionBox from './MotionBox';
 interface MenuItemProps {
   mouseX: MotionValue<number>;
   isHovered: boolean;
+  itemLength: number;
 }
 
-const ITEM_LENGTH = 64;
-
-const MenuItem: React.FC<MenuItemProps> = ({ mouseX, isHovered }) => {
+const MenuItem: React.FC<MenuItemProps> = ({
+  mouseX,
+  isHovered,
+  itemLength,
+}) => {
+  // console.log(itemLength);
   const ref = useRef<HTMLDivElement>(null);
   const [left, setLeft] = useState(0);
   const [isSelected, setIsSelected] = useState(false);
 
   const distance = useTransform(mouseX, (newMouseX) => {
-    return Math.abs(left + ITEM_LENGTH / 2 - newMouseX);
+    return Math.abs(left + itemLength / 2 - newMouseX);
   });
 
   const length = useTransform(
     distance,
-    [100, 0],
-    [ITEM_LENGTH, ITEM_LENGTH * 1.4]
+    [itemLength * 1.6, 0],
+    [itemLength, itemLength * 1.4]
   );
-  const rise = useTransform(distance, [0, 120], [-8, 0]);
+  const rise = useTransform(
+    distance,
+    [0, itemLength * 2],
+    [itemLength * -0.125, 0]
+  );
   const riseSpring = useSpring(rise, {
     damping: 20,
     mass: 1,
@@ -48,10 +56,10 @@ const MenuItem: React.FC<MenuItemProps> = ({ mouseX, isHovered }) => {
         }}
         ref={ref}
         whileTap={{ translateY: 0 }}
-        width={`${ITEM_LENGTH}px`}
-        height={`${ITEM_LENGTH}px`}
+        width={`${itemLength}px`}
+        height={`${itemLength}px`}
         background="linear-gradient(to left, hsla(160 60% 100% / 1), hsla(210 60% 90% / 1))"
-        borderRadius="14px"
+        borderRadius={itemLength * 0.22}
         boxShadow="0 8px 16px rgba(0 0 0 / 0.15"
         onTap={() => setIsSelected((prev) => !prev)}
       />
