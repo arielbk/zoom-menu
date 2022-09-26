@@ -37,16 +37,17 @@ const Menu: React.FC = () => {
       alignItems="flex-end"
       gap={4}
       position="fixed"
-      background="rgba(0 0 0 / 0.5)"
       bottom={2}
       height="98px"
-      padding="0.5rem 1rem 1.4rem"
-      border="1px solid rgba(200 200 200 / 0.5)"
+      padding="0.5rem 1rem"
+      border="1px solid rgba(200 200 200 / 0.6)"
       left="50%"
       transform="translateX(-50%)"
       borderRadius={24}
+      backdropFilter="blur(18px) brightness(60%)"
+      boxShadow="0 0 2px rgba(0 0 0 / 0.4)"
     >
-      {Array.from({ length: 7 }).map((_, i) => (
+      {Array.from({ length: 5 }).map((_, i) => (
         <MenuItem isHovered={isHovered} mouseX={mouseX} key={i} />
       ))}
     </Box>
