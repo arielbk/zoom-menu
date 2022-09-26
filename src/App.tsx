@@ -6,7 +6,7 @@ function App() {
   return (
     <ChakraProvider>
       <Menu />
-      {Array.from({ length: 3 }).map((_, i) => (
+      {Array.from({ length: 4 }).map((_, i) => (
         <RandomSlide
           key={i}
           src={`https://source.unsplash.com/random/2000x2000/?abstract&id=${i}`}
