@@ -11,6 +11,7 @@ const Menu: React.FC = () => {
 
   const [isResizing, setIsResizing] = useState(false);
   const mouseYOrigin = useRef<null | number>(null);
+  const [scaleOrigin, setScaleOrigin] = useState(1);
 
   const scale = useMotionValue(1);
 
@@ -33,13 +34,15 @@ const Menu: React.FC = () => {
   useEffect(() => {
     if (!isResizing) {
       mouseYOrigin.current = null;
+      setScaleOrigin(scale.get());
       return;
     }
+    document.body.style.cursor = 'row-resize';
     const handleResize = (e: MouseEvent) => {
       if (mouseYOrigin.current === null)
         return (mouseYOrigin.current = e.clientY);
       const dragDiff = e.clientY - mouseYOrigin.current;
-      const newScale = 1 + -dragDiff / 80;
+      const newScale = scaleOrigin + -dragDiff / 100;
       if (newScale < 0.5) return;
       if (newScale > 2) return;
       animate(scale, newScale);
@@ -48,6 +51,7 @@ const Menu: React.FC = () => {
     document.addEventListener('mousemove', handleResize);
     document.addEventListener('mouseup', handleResizeEnd);
     return () => {
+      document.body.style.cursor = 'inherit';
       document.removeEventListener('mousemove', handleResize);
       document.removeEventListener('mouseup', handleResizeEnd);
     };
@@ -71,6 +75,7 @@ const Menu: React.FC = () => {
       borderRadius={24}
       backdropFilter="blur(18px) brightness(60%)"
       boxShadow="0 0 2px rgba(0 0 0 / 0.4)"
+      userSelect="none"
       style={{
         scale,
         translateX: '-50%',
@@ -78,8 +83,14 @@ const Menu: React.FC = () => {
         transformOrigin: 'bottom center',
       }}
     >
-      {Array.from({ length: 3 }).map((_, i) => (
-        <MenuItem scale={scale} isHovered={isHovered} mouseX={mouseX} key={i} />
+      {Array.from({ length: 4 }).map((_, i) => (
+        <MenuItem
+          scale={scale}
+          isHovered={isHovered}
+          isResizing={isResizing}
+          mouseX={mouseX}
+          key={i}
+        />
       ))}
       <Box
         px={2}
@@ -95,7 +106,13 @@ const Menu: React.FC = () => {
         <Divider orientation="vertical" />
       </Box>
       {Array.from({ length: 2 }).map((_, i) => (
-        <MenuItem scale={scale} isHovered={isHovered} mouseX={mouseX} key={i} />
+        <MenuItem
+          scale={scale}
+          isHovered={isHovered}
+          isResizing={isResizing}
+          mouseX={mouseX}
+          key={i}
+        />
       ))}
     </Box>
   );
