@@ -1,17 +1,25 @@
-import { motion, MotionValue, useSpring, useTransform } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
 import { Box } from '@chakra-ui/react';
+import { motion, MotionValue, useSpring, useTransform } from 'framer-motion';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import MotionBox from './MotionBox';
 
 interface MenuItemProps {
   mouseX: MotionValue<number>;
   isHovered: boolean;
+  isResizing: boolean;
   scale: MotionValue<number>;
+  children: ReactElement;
 }
 
 const ITEM_LENGTH = 64;
 
-const MenuItem: React.FC<MenuItemProps> = ({ mouseX, isHovered, scale }) => {
+const MenuItem: React.FC<MenuItemProps> = ({
+  mouseX,
+  isHovered,
+  isResizing,
+  scale,
+  children,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const [left, setLeft] = useState(0);
   const [isSelected, setIsSelected] = useState(false);
@@ -37,12 +45,13 @@ const MenuItem: React.FC<MenuItemProps> = ({ mouseX, isHovered, scale }) => {
     mass: 1,
     stiffness: 500,
   });
+  const iconScale = useTransform(length, (length) => length / 64);
 
   useEffect(() => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     setLeft(rect.left);
-  }, [ref.current, isHovered]);
+  }, [ref.current, isHovered, isResizing]);
 
   return (
     <Box display="flex" flexDir="column" alignItems="center" gap={2}>
@@ -55,13 +64,18 @@ const MenuItem: React.FC<MenuItemProps> = ({ mouseX, isHovered, scale }) => {
         }}
         ref={ref}
         whileTap={{ translateY: 0 }}
-        width={`${ITEM_LENGTH}px`}
-        height={`${ITEM_LENGTH}px`}
-        background="linear-gradient(to left, hsla(160 60% 100% / 1), hsla(210 60% 90% / 1))"
+        background="linear-gradient(to left, hsla(160 60% 100% / 1), hsla(220 60% 85% / 1))"
         borderRadius="14px"
-        boxShadow="0 8px 16px rgba(0 0 0 / 0.15"
+        boxShadow="0 8px 16px rgba(0 0 0 / 0.15)"
         onTap={() => setIsSelected((prev) => !prev)}
-      />
+        color="gray.500"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        fontSize="2rem"
+      >
+        <motion.div style={{ scale: iconScale }}>{children}</motion.div>
+      </MotionBox>
       <Box
         as={motion.div}
         width={1}

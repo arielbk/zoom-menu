@@ -1,6 +1,15 @@
 import { Box, Divider } from '@chakra-ui/react';
 import { animate, motion, useMotionValue } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
+import {
+  FiGithub,
+  FiLock,
+  FiHeart,
+  FiTag,
+  FiCloudLightning,
+  FiFile,
+  FiSun,
+} from 'react-icons/fi';
 import MenuItem from './MenuItem';
 
 const Menu: React.FC = () => {
@@ -83,14 +92,22 @@ const Menu: React.FC = () => {
         transformOrigin: 'bottom center',
       }}
     >
-      {Array.from({ length: 4 }).map((_, i) => (
+      {[
+        <FiCloudLightning />,
+        <FiFile />,
+        <FiLock />,
+        <FiHeart />,
+        <FiTag />,
+      ].map((icon, i) => (
         <MenuItem
           scale={scale}
           isHovered={isHovered}
           isResizing={isResizing}
           mouseX={mouseX}
           key={i}
-        />
+        >
+          {icon}
+        </MenuItem>
       ))}
       <Box
         px={2}
@@ -105,14 +122,16 @@ const Menu: React.FC = () => {
       >
         <Divider orientation="vertical" />
       </Box>
-      {Array.from({ length: 2 }).map((_, i) => (
+      {[<FiSun />, <FiGithub />].map((icon, i) => (
         <MenuItem
           scale={scale}
           isHovered={isHovered}
           isResizing={isResizing}
           mouseX={mouseX}
           key={i}
-        />
+        >
+          {icon}
+        </MenuItem>
       ))}
     </Box>
   );
