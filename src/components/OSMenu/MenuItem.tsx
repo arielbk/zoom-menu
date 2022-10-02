@@ -1,25 +1,14 @@
 import { Box } from '@chakra-ui/react';
-import { motion, MotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useSpring, useTransform } from 'framer-motion';
 import { ReactElement, useEffect, useRef, useState } from 'react';
-import MotionBox from './MotionBox';
-
-interface MenuItemProps {
-  mouseX: MotionValue<number>;
-  isHovered: boolean;
-  isResizing: boolean;
-  scale: MotionValue<number>;
-  children: ReactElement;
-}
+import { useMenuValues } from '.';
+import MotionBox from '../MotionBox';
 
 const ITEM_LENGTH = 64;
 
-const MenuItem: React.FC<MenuItemProps> = ({
-  mouseX,
-  isHovered,
-  isResizing,
-  scale,
-  children,
-}) => {
+const MenuItem: React.FC<{ children: ReactElement }> = ({ children }) => {
+  const { mouseX, isHovered, isResizing, scale } = useMenuValues();
+
   const ref = useRef<HTMLDivElement>(null);
   const [left, setLeft] = useState(0);
   const [isSelected, setIsSelected] = useState(false);

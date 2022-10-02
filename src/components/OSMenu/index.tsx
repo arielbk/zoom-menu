@@ -1,18 +1,28 @@
-import { Box, Divider } from '@chakra-ui/react';
-import { animate, motion, useMotionValue } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
-import {
-  FiGithub,
-  FiLock,
-  FiHeart,
-  FiTag,
-  FiCloudLightning,
-  FiFile,
-  FiSun,
-} from 'react-icons/fi';
+import { animate, MotionValue, useMotionValue } from 'framer-motion';
+import React, {
+  createContext,
+  ReactElement,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import MenuPane, { MenuDivider } from './MenuPane';
 import MenuItem from './MenuItem';
 
-const Menu: React.FC = () => {
+interface MenuValues {
+  isHovered: boolean;
+  setIsHovered: (is: boolean) => void;
+  scale: MotionValue<number>;
+  mouseX: MotionValue<number>;
+  isResizing: boolean;
+  setIsResizing: (is: boolean) => void;
+}
+const MenuContext = createContext({} as MenuValues);
+
+const OSMenu: React.FC<{ children: ReactElement | Array<ReactElement> }> = ({
+  children,
+}) => {
   const isFirstTransition = useRef(true);
 
   const mouseX = useMotionValue(0);
@@ -67,74 +77,23 @@ const Menu: React.FC = () => {
   }, [isResizing]);
 
   return (
-    <Box
-      as={motion.nav}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      display="flex"
-      alignItems="flex-end"
-      gap={2}
-      position="fixed"
-      height={'96px'}
-      paddingX="0.7rem"
-      paddingBottom="0.5rem"
-      border="1px solid rgba(200 200 200 / 0.6)"
-      left="50%"
-      transform="translateX(-50%)"
-      borderRadius={24}
-      backdropFilter="blur(18px) brightness(60%)"
-      boxShadow="0 0 2px rgba(0 0 0 / 0.4)"
-      userSelect="none"
-      style={{
+    <MenuContext.Provider
+      value={{
+        isHovered,
+        setIsHovered,
         scale,
-        translateX: '-50%',
-        bottom: 8,
-        transformOrigin: 'bottom center',
+        mouseX,
+        isResizing,
+        setIsResizing,
       }}
     >
-      {[
-        <FiCloudLightning />,
-        <FiFile />,
-        <FiLock />,
-        <FiHeart />,
-        <FiTag />,
-      ].map((icon, i) => (
-        <MenuItem
-          scale={scale}
-          isHovered={isHovered}
-          isResizing={isResizing}
-          mouseX={mouseX}
-          key={i}
-        >
-          {icon}
-        </MenuItem>
-      ))}
-      <Box
-        px={2}
-        py={2}
-        height="full"
-        cursor="row-resize"
-        as={motion.div}
-        onMouseDown={() => {
-          setIsResizing(true);
-        }}
-        draggable="false"
-      >
-        <Divider orientation="vertical" />
-      </Box>
-      {[<FiSun />, <FiGithub />].map((icon, i) => (
-        <MenuItem
-          scale={scale}
-          isHovered={isHovered}
-          isResizing={isResizing}
-          mouseX={mouseX}
-          key={i}
-        >
-          {icon}
-        </MenuItem>
-      ))}
-    </Box>
+      <MenuPane>{children}</MenuPane>
+    </MenuContext.Provider>
   );
 };
 
-export default Menu;
+export default OSMenu;
+
+const useMenuValues = () => useContext(MenuContext);
+
+export { useMenuValues, MenuItem, MenuDivider };
