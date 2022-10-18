@@ -1,15 +1,18 @@
-import { Box, Divider } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { Box, chakra, Divider } from '@chakra-ui/react';
+import { isValidMotionProp, motion } from 'framer-motion';
 import { ReactElement } from 'react';
 import { useMenuValues } from '.';
+
+const ChakraBox = chakra(motion.div, {
+  shouldForwardProp: isValidMotionProp,
+});
 
 const MenuPane: React.FC<{ children: ReactElement | Array<ReactElement> }> = ({
   children,
 }) => {
   const { setIsHovered, scale } = useMenuValues();
   return (
-    <Box
-      as={motion.nav}
+    <ChakraBox
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       display="flex"
@@ -34,7 +37,7 @@ const MenuPane: React.FC<{ children: ReactElement | Array<ReactElement> }> = ({
       }}
     >
       {children}
-    </Box>
+    </ChakraBox>
   );
 };
 
