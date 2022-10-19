@@ -1,10 +1,11 @@
-import { Box, chakra, Divider } from '@chakra-ui/react';
+import { Box, chakra, Divider, shouldForwardProp } from '@chakra-ui/react';
 import { isValidMotionProp, motion } from 'framer-motion';
 import { ReactElement } from 'react';
 import { useMenuValues } from '.';
 
 const ChakraBox = chakra(motion.div, {
-  shouldForwardProp: isValidMotionProp,
+  shouldForwardProp: (prop) =>
+    isValidMotionProp(prop) || shouldForwardProp(prop),
 });
 
 const MenuPane: React.FC<{ children: ReactElement | Array<ReactElement> }> = ({
